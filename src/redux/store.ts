@@ -1,10 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/authSlice"
 import constantReducer from     "./constants/constantslice"
+import messageReducer from "./messageSlice"
+import loadingReducer from "./loadingSlice"
 
 const reducers = {
   auth:authReducer,
-  constants:constantReducer
+  constants:constantReducer,
+  message:messageReducer,
+  loading:loadingReducer
 };
 
 const defaultMiddlewareConfig = {

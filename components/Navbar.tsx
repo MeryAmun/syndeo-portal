@@ -19,10 +19,10 @@ function Navbar() {
        <div className="flex flex-row justify-center items-center gap-15">
          <h2 className='text-[#fff] text-center'>Language Select</h2>
         <div className="flex flex-row justify-center items-center gap-5">
-            <Link href="/login" className='text-[#4bd5ff] uppercase'>
+            <Link href="/login" className='text-[#686fff] uppercase'>
             Login
             </Link>
-            <Link href="/register" className='text-[#4bd5ff] uppercase'>
+            <Link href="/register" className='text-[#686fff] uppercase'>
            Register
             </Link>
            
