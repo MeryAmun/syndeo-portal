@@ -6,10 +6,8 @@ const API_URL = "http://localhost:5000/api/auth"
 
 //============REGISTER USER================
 
-const register = async (
-    email,
-    password
-       ) => {
+const register = async (email,password) => {
+         //console.log(email,password)
     return await axios.post(`${API_URL}/register`, {
         email,
         password
@@ -63,8 +61,8 @@ const resetPasswordRequest = async (email) => {
 
 //============RESET PASSWORD RESPONSE================
 
-const resetPasswordResponse = async (password,confirmPassword, id, token) => {
-    return await axios.post(API_URL + 'reset-password-confirmation', {password,confirmPassword, id, token}
+const resetPassword = async (password,id, token) => {
+    return await axios.post(API_URL + 'reset-password', {password,id, token}
     )
     .then((response) => {
       return  response.data
@@ -74,5 +72,5 @@ const resetPasswordResponse = async (password,confirmPassword, id, token) => {
 
 
 export const authService = {
-    register, verify, singIn,logout,resetPasswordRequest,resetPasswordResponse
+    register, verify, singIn,logout,resetPasswordRequest,resetPassword
 };

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .main{
+            width:100%;
+            height:100vh;
+            display:flex;
+    justify-content: center;
+    align-items: center;
+     flex-direction: column;
+     padding: 20px 0;
+       gap:10px;
+        }
+        .container-main{
+            width:50%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+     flex-direction: column;
+     gap:10px;
+     box-shadow: 3px 3px 3px 3px #686fff;
+     border-radius: 5px;
+     padding: 20px 0;
+    }
+        .container{
+            width:50%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+     flex-direction: column;
+     gap:10px;
+    
+    }
+    .textInputContainer{
+        padding: 0px 5px;
+        border:1px solid #686fff;
+        border-radius:5px;
+        width: 100%;
+    }
+    .textInput{
+        padding: 10px 5px;
+        border:none;
+        outline:none
+    }
+    .header{
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 22px;
+        color:#686fff;
+        text-transform: uppercase;
+    }
+    .btn{
+        padding: 8px 10px;
+        outline: none;
+        background-color: transparent;
+         color:#686fff;
+         font-weight: bold;
+         border:1px solid #686fff;
+         border-radius: 5px;
+         cursor: pointer;
+    }
+    </style>
+    
+</head>
+<body>
+    <div class="main">
+        <div class="container-main">
+        <div class="">
+            <h2 class="header">Enter New Password</h2>
+        </div>
+        <form action="" class="container" method="post">
+            <div class="textInputContainer"> 
+    <input type="password" class="textInput" id="password"  onchange={handleChangePassword()} placeholder="Enter Password" value="">
+        </div>
+        <div class="textInputContainer">
+           
+    <input type="password" onchange={handleChange} id=""confirmPassword class="textInput placeholder=" placeholder="Confirm Password" value="">
+        </div>
+         <button type="button" class="btn" placeholder="Confirm Password" value="">
+         Change Password
+        </button>
+         </form>
+    </div>  
+    </div>
+    </div>
+    <script>
+         
+          const confirmPassword = document.getElementById("confirmPassword")
+      let finalValue = ""
+        const handleChangePassword = () => {
+            const password = document.getElementById('password')
+            finalValue = ""
+            password.addEventListener("change", function(event){
+                finalValue = event.target.value 
+                console.log(finalValue)
+            })
+            
+        }
+   
+    </script>
+</body>
+</html>

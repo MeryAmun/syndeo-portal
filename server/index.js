@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-const express = require('express');
+const  express = require('express');
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
+const cors = require("cors");
 //require("./envConfig")
-const authRoutes = require('./routes/authRoutes');
+ const authRoutes = require('./routes/authRoutes');
 //const resend = new Resend(process.env.RESEND_API_KEY);
 
 dotenv.config()
@@ -12,12 +13,26 @@ const app = express()
 const port = process.env.NEXT_PUBLIC_PORT || 5000
 console.log(process.env.NEXT_PUBLIC_PORT)
 app.use(express.json())
+///=================CORS LOCAL===========================
+ app.use(cors({ origin: 'http://localhost:3000' }));
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  
+  next();
+});
+
+
 app.get("/",(req,res) => {
     res.send({message:"Welcome to syndeo server"})
 })
 
-app.use("/api/auth",authRoutes.registerRoute)
-app.use("/api/auth",authRoutes.signInRoute)
+ app.use("/api/auth",authRoutes.registerRoute)
+ app.use("/api/auth",authRoutes.verifyUserRoute)
+ app.use("/api/auth",authRoutes.signInRoute)
+ app.use("/api/auth",authRoutes.resetPasswordRequestRoute)
+ app.use("/api/auth",authRoutes.resetPasswordRoute)
 mongoose.connect("mongodb+srv://meryamun:K7OZ9J6SVHMe97ZE@transport.jlugw.mongodb.net/?retryWrites=true&w=majority&appName=Transport")
 // .then(() => console.log("connected to db"))
 // .cath(err => console.log("could not connect to DB", err))

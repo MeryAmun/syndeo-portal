@@ -3,6 +3,7 @@ import { authService } from "../../services/authService"
 
 import { messageActions } from "../messageSlice";
 import { loadingActions } from "../loadingSlice";
+import { authActions } from "../auth/authSlice";
 
 
 
@@ -12,21 +13,20 @@ export const registerUser = createAsyncThunk(
     '/register',
     async (register, thunkApi) => {
   const {email,password } = register
-  console.log(register)
+  
         try {
           thunkApi.dispatch(loadingActions.startLoading());
             const response = await authService.register(
         email,
         password
               );
-            thunkApi.dispatch(messageActions.setMessage(response.message));
+            thunkApi.dispatch(messageActions.setMessage(response?.data.message));
             thunkApi.dispatch(loadingActions.endLoading());
             console.log(response.data)
             return response.data
-        } catch (error:any) {
-            const message =  (error.response && error.data && error.response.data.message) ||
-            error.message ||
-            error.toString();
+        } catch (error) {
+            console.log(error)
+            const message =   error.response.data.message
             thunkApi.dispatch(messageActions.setMessage(message));
             //thunkApi.dispatch(authActions.);
             thunkApi.dispatch(loadingActions.endLoading());
@@ -42,9 +42,7 @@ export const verifyUser = createAsyncThunk('/verify/:token', async({token}, thun
     thunkApi.dispatch(messageActions.setMessage(response.data.message));
     return response.data
     } catch (error) {
-     const message =  (error.response && error.data && error.response.data.message) ||
-     error.message ||
-     error.toString();
+     const message =  error.response && error.data && error.response.data.message
      thunkApi.dispatch(messageActions.setMessage(message));
      return thunkApi.rejectWithValue();
     }
@@ -55,9 +53,9 @@ export const verifyUser = createAsyncThunk('/verify/:token', async({token}, thun
 
 export const loginUser = createAsyncThunk(
     '/login',
-    async ({email, password}, thunkApi) => {
-      
-        try {
+    async (formData, thunkApi) => {
+      const {email, password} = formData;
+       try {
             
             thunkApi.dispatch(loadingActions.startLoading());
             const data = await authService.singIn(email, password);
@@ -66,13 +64,7 @@ export const loginUser = createAsyncThunk(
             return {user: data}
             
         } catch (error) {
-            const message = (
-                error.response &&
-                error.response.data &&
-                error.response.data.message
-            ) ||
-            error.message ||
-            error.toString();
+            const message = error.response.data.message
             thunkApi.dispatch(messageActions.setMessage(message));
             
             thunkApi.dispatch(loadingActions.endLoading());
@@ -92,14 +84,19 @@ export const logoutUser = createAsyncThunk('/user/logout', async () => {
 
  //============RESET PASSWORD REQUEST ACTION================
 
-export const resetUserPasswordRequest = createAsyncThunk('/reset-password-request', async({email}, thunkApi) => {
+export const resetPasswordRequest = createAsyncThunk('/reset-password-request', async({email}, thunkApi) => {
     try {
+        thunkApi.dispatch(loadingActions.startLoading());
     const response =  await authService.resetPasswordRequest(email);
     console.log(response.message)
     thunkApi.dispatch(messageActions.setMessage(response.message));
+    thunkApi.dispatch(authActions.setTokenAndId(response.data))
+    thunkApi.dispatch(loadingActions.endLoading());
     return response.data
     } catch (error) {
-        const message = error.response.data.message
+         thunkApi.dispatch(loadingActions.endLoading());
+        console.log(error)
+        const message = error.message 
     //  const message =  (error.response && error.data && error.response.data.message) ||
     //  error.message ||
     //  error.toString();
@@ -110,17 +107,17 @@ export const resetUserPasswordRequest = createAsyncThunk('/reset-password-reques
 
  //============RESET PASSWORD RESPONSE  ACTION================
 
- export const resetUserPasswordResponse = createAsyncThunk('/reset-password-confirmation', async({password, confirmPassword, id, token}, thunkApi) => {
+ export const resetPassword = createAsyncThunk('/reset-password', async({password,id, token}, thunkApi) => {
     try {
-    const response =  await authService.resetPasswordResponse(password, confirmPassword, id, token);
+        thunkApi.dispatch(loadingActions.startLoading());
+    const response =  await authService.resetPassword(password, id, token);
     console.log(response.message)
     thunkApi.dispatch(messageActions.setMessage(response.message));
+    thunkApi.dispatch(loadingActions.endLoading());
     return response.data
     } catch (error) {
-        console.log(error)
-     const message =  (error.response && error.data && error.response.data.message) ||
-     error.message ||
-     error.toString();
+       thunkApi.dispatch(loadingActions.endLoading());
+     const message =  error.message
      thunkApi.dispatch(messageActions.setMessage(message));
      return thunkApi.rejectWithValue();
     }

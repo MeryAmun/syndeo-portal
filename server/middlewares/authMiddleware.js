@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-const { validate }= require("deep-email-validator")
+const { validate } = require("deep-email-validator")
 const User = require("../models/UserModel")
 const jwt = require('jsonwebtoken');
 

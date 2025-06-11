@@ -1,90 +1,75 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "@/redux/actions/authActions";
-
-import { messageActions } from "@/redux/messageSlice";
 import { useRouter } from "next/navigation";
-import SmallLoader from "../../../components/loaders/SmallLoader";
+import { messageActions } from "@/redux/messageSlice";
 import CustomMessage from "../../../components/CustomMessage";
+import SmallLoader from "../../../components/loaders/SmallLoader";
+import { resetPassword } from "@/redux/actions/authActions";
+import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 
-const Register = () => {
-  const router = useRouter();
-  const dispatch = useDispatch();
+const ResetPassword = () => {
   const { message } = useSelector((state) => state.message);
   const { isLoading } = useSelector((state) => state.loading);
-  const [show, setShow] = useState(false);
-  const [register, setRegister] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [error, setError] = useState("");
+  const { userId, token } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const router = useRouter();
+    const [show, setShow] = useState(false);
+    const [error, setError] = useState("");
+  const [newPassword, setNewPassword] = useState({
+    password:"",
+    confirmPassword:""
+  })
 
   useEffect(() => {
     dispatch(messageActions.clearMessage());
   }, [dispatch]);
 
   useEffect(() => {
-    if (message === "User registered Successfully") {
-      setRegister({
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
-      router.push("/email-verification");
+    if (message === "New password created successfully") {
+      router.push("/login");
     }
   }, [message, router]);
 
   const handleChange = (e) => {
-    setError("");
-    const value = e.target.value;
-    setRegister({ ...register, [e.target.name]: value });
+     setError("");
+    const value = e.target.value
+   setNewPassword({...newPassword,[e.target.name]:value})
   };
-  const handleShowPassword = () => {
+ const handleShowPassword = () => {
     setShow((prev) => !prev);
   };
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    if (register.password === register.confirmPassword) {
-      dispatch(registerUser(register));
+  const handlePasswordReset = (e) => {
+        e.preventDefault();
+    const { password,confirmPassword } = newPassword
+     if (password === confirmPassword) {
+     dispatch(resetPassword({password,userId, token}));
     } else {
       setError("Passwords do not match");
     }
+   
+   
   };
 
   return (
     <div className="w-auto h-[73.6vh] flex justify-center items-center py-10">
-      <div className="h-[100%] flex flex-col justify-center items-center shadow-xl w-[45%] shadow-shade rounded-md">
-      <div className="">
-        <h2 className="font-bold text-[#686fff] text-center uppercase text-lg">
-          Register school admin
-        </h2>
-      </div>
-      <form
-        className="flex flex-col justify-center items-center w-[100%] px-4 py-4 gap-3"
-        onSubmit={handleRegister}
-      >
-        <div className="flex justify-center items-center px-3 py-2 border-1 border-[#686fff] w-[50%] rounded-sm">
-          <input
-            type="text"
-            className="border-none outline-none w-[100%]"
-            placeholder="Enter Email Address"
-            name="email"
-            value={register.email}
-            autoComplete="off"
-            onChange={handleChange}
-          />
+      <div className="h-[100%] flex flex-col justify-center items-center shadow-xl rounded-md shadow-shade w-[45%]">
+        <div className="pb-3">
+          <h3 className="uppercase text-center text-lg font-bold text-primary">
+             Get a new password
+          </h3>
         </div>
+       <form
+        className="flex flex-col justify-center items-center w-[100%] px-4 py-4 gap-3"
+        onSubmit={handlePasswordReset}
+      >
         <div className="flex justify-center items-center px-3 py-2 border-1 border-[#686fff] w-[50%] rounded-sm">
           <input
             type={show ? "text" : "password"}
             className="border-none outline-none w-[100%]"
             placeholder="Enter Password"
             name="password"
-            value={register.password}
+            value={newPassword.password}
             autoComplete="off"
             onChange={handleChange}
           />
@@ -110,7 +95,7 @@ const Register = () => {
             className="border-none outline-none w-[100%]"
             placeholder="Confirm Password"
             name="confirmPassword"
-            value={register.confirmPassword}
+            value={newPassword.confirmPassword}
             autoComplete="off"
             onChange={handleChange}
           />
@@ -130,26 +115,27 @@ const Register = () => {
             />
           )}
         </div>
-        <div className="border-1 border-[#4bd5ff] px-4 py-1 rounded-sm">
+        <div className="border-1 border-[#4bd5ff] px-4 py-1 rounded-sm mb-5">
           <button
             type="submit"
-            className="uppercase font-semibold text-[#686fff] cursor-pointer"
+            className="uppercase font-semibold text-[#686fff] cursor-pointer outline-none"
           >
-            Submit Registration
+            Reset password
           </button>
         </div>
-        {error !== "" && (
+         {isLoading && <SmallLoader />}
+         </form>
+         {error !== "" && (
           <div className="border-none  px-4 py-1 rounded-sm">
             <span className="text-red-500 text-center">{error}</span>
           </div>
         )}
         {message !== "" && <CustomMessage message={message} />}
 
-        {isLoading && <SmallLoader />}
-      </form>
-    </div>
+       
+      </div>
     </div>
   );
 };
 
-export default Register;
+export default ResetPassword;

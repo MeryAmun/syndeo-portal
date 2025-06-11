@@ -1,13 +1,14 @@
 "use client"
 import Image from 'next/image'
-import Link from 'next/link'
+import { useRouter } from "next/navigation"
 import React from 'react'
 
 
 function Navbar() {
+  const router = useRouter()
   return (
     <div className='h-[80px] bg-[#000000] w-[100%] flex flex-row justify-between px-10 align-items-middle items-center'>
-        <Link href="/">
+        <button type="button" className="cursor-pointer" onClick={() => router.push("/")}>
         <Image 
          className="dark:invert"
               src="/images/splash-icon.png"
@@ -15,17 +16,16 @@ function Navbar() {
               width={60}
               height={40}
               />
-              </Link>
+              </button>
        <div className="flex flex-row justify-center items-center gap-15">
          <h2 className='text-[#fff] text-center'>Language Select</h2>
         <div className="flex flex-row justify-center items-center gap-5">
-            <Link href="/login" className='text-[#686fff] uppercase'>
-            Login
-            </Link>
-            <Link href="/register" className='text-[#686fff] uppercase'>
-           Register
-            </Link>
-           
+             <button type="button" className='text-primary uppercase cursor-pointer' onClick={() => router.push("/login")}>
+              Login
+            </button>
+            <button type="button" className='text-primary uppercase cursor-pointer' onClick={() => router.push("/register")}>
+              register
+            </button>
         </div>
        </div>
     </div>
